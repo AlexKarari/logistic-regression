@@ -1,5 +1,5 @@
 """
-Train Model — Day 3: Logistic Regression (Telco Customer Churn)
+Train Model: Logistic Regression (Telco Customer Churn)
 ===============================================================
 
 End-to-end pipeline: load real Telco churn data, clean, encode,
@@ -226,8 +226,6 @@ def main():
         pickle.dump(artifact, f)
 
     print(f"\n✓ Model saved to {artifact_path}")
-    print("  → Day 4: Classification metrics deep dive on this model")
-    print("  → Day 5: FastAPI deployment of this model")
     print("=" * 60)
 
 
