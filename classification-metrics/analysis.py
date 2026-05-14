@@ -1,10 +1,10 @@
 """
-Day 04 — Classification Metrics Analysis Script
+Classification Metrics Analysis Script
 ================================================
-Evaluates the Day 3 LogisticRegressionScratch model trained on
+Evaluates the LogisticRegressionScratch model trained on
 Kaggle Telco Customer Churn data.
 
-Artifact contract (from Day 3 train_model.py)
+Artifact contract (from train_model.py)
 ---------------------------------------------
     artifact = {
         "model":         LogisticRegressionScratch instance,
@@ -22,8 +22,8 @@ Usage
 
 Prerequisites
 -------------
-    ../day-03-logistic-regression/models/churn_model.pkl
-    ../day-03-logistic-regression/data/Telco-Customer-Churn.csv
+    ./models/churn_model.pkl
+    ./data/Telco-Customer-Churn.csv
 """
 
 import os
@@ -53,17 +53,17 @@ matplotlib.rcParams.update({"figure.dpi": 120, "axes.spines.top": False,
                              "axes.spines.right": False})
 
 SEED       = 42
-MODEL_PATH = "../day-03-logistic-regression/models/churn_model.pkl"
-DATA_PATH  = "../day-03-logistic-regression/data/Telco-Customer-Churn.csv"
+MODEL_PATH = "./models/churn_model.pkl"
+DATA_PATH  = "./data/Telco-Customer-Churn.csv"
 
 np.random.seed(SEED)
 
 # ─────────────────────────────────────────────
-# Replicate Day 3 preprocessing exactly
+# Replicate preprocessing exactly
 # ─────────────────────────────────────────────
 
 def load_and_clean(path: str) -> pd.DataFrame:
-    """Mirror of Day 3 load_and_clean — must stay identical."""
+    """Mirror of load_and_clean — must stay identical."""
     df = pd.read_csv(path)
     df = df.drop("customerID", axis=1)
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
@@ -73,7 +73,7 @@ def load_and_clean(path: str) -> pd.DataFrame:
 
 
 def encode_features(df: pd.DataFrame) -> tuple:
-    """Mirror of Day 3 encode_features — must stay identical."""
+    """Mirror of encode_features — must stay identical."""
     binary_cols = ["gender", "Partner", "Dependents", "PhoneService", "PaperlessBilling"]
     multi_cat_cols = [
         "MultipleLines", "InternetService", "OnlineSecurity", "OnlineBackup",
@@ -95,7 +95,7 @@ def encode_features(df: pd.DataFrame) -> tuple:
 # ─────────────────────────────────────────────
 
 print("─" * 60)
-print("  Day 04 — Classification Metrics Deep Dive")
+print("  Classification Metrics Deep Dive")
 print("  Dataset: Telco Customer Churn (Kaggle)")
 print("─" * 60)
 
@@ -107,8 +107,8 @@ if not os.path.exists(DATA_PATH):
 
 if not os.path.exists(MODEL_PATH):
     sys.exit(
-        f"\n✗  Day 3 artifact not found at: {MODEL_PATH}\n"
-        "   Run Day 3 train_model.py first to generate it."
+        f"\n✗  artifact not found at: {MODEL_PATH}\n"
+        "   Run train_model.py first to generate it."
     )
 
 # --- Data ---
@@ -121,7 +121,7 @@ with open(MODEL_PATH, "rb") as f:
 
 model         = artifact["model"]
 scaler        = artifact["scaler"]
-feature_names = artifact["feature_names"]   # exact column order from Day 3
+feature_names = artifact["feature_names"] 
 threshold     = artifact["threshold"]
 d3_test_m     = artifact["test_metrics"]
 
@@ -129,7 +129,7 @@ y = df_encoded["Churn"].values
 
 print(f"\n  Customers: {len(df_raw):,} | Churn rate: {y.mean():.1%} ({y.sum()} churners)")
 print(f"  Features (encoded): {len(feature_names)}")
-print(f"  Day 3 reported test  →  Acc={d3_test_m['accuracy']:.4f}  "
+print(f"  Logistic regression reported test  →  Acc={d3_test_m['accuracy']:.4f}  "
       f"P={d3_test_m['precision']:.4f}  R={d3_test_m['recall']:.4f}  "
       f"F1={d3_test_m['f1']:.4f}")
 
@@ -208,7 +208,7 @@ fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 fig.suptitle("Confusion Matrix — Threshold Comparison (Telco Churn)",
              fontsize=13, fontweight="bold")
 for ax, (t, label) in zip(axes, [
-    (threshold,              f"Day 3 default ({threshold:.2f})"),
+    (threshold,              f"Logistic Regression default ({threshold:.2f})"),
     (opt_f1["threshold"],    f"F1-optimal ({opt_f1['threshold']:.2f})"),
     (opt_cost["threshold"],  f"Cost 1:3 ({opt_cost['threshold']:.2f})"),
 ]):
@@ -223,9 +223,9 @@ for ax, (t, label) in zip(axes, [
     ax.set_xlabel("Predicted"); ax.set_ylabel("Actual")
     ax.set_title(f"{label}\nP={p_:.3f}  R={r_:.3f}  F1={f_:.3f}")
 plt.tight_layout()
-plt.savefig("visualizations/fig1_confusion_matrices.png", bbox_inches="tight")
+plt.savefig("visualisations/fig1_confusion_matrices.png", bbox_inches="tight")
 plt.close()
-print("\n  Saved: visualizations/fig1_confusion_matrices.png")
+print("\n  Saved: visualisations/fig1_confusion_matrices.png")
 
 # Fig 2 — ROC
 tp0, tn0, fp0, fn0 = confusion_matrix_scratch(y_test, (y_prob_test >= threshold).astype(int))
@@ -242,9 +242,9 @@ ax.set_xlabel("False Positive Rate"); ax.set_ylabel("True Positive Rate (Recall)
 ax.set_title("ROC Curve — Telco Churn", fontweight="bold")
 ax.legend(loc="lower right"); ax.set_xlim([-0.01, 1.01]); ax.set_ylim([-0.01, 1.01])
 plt.tight_layout()
-plt.savefig("visualizations/fig2_roc_curve.png", bbox_inches="tight")
+plt.savefig("visualisations/fig2_roc_curve.png", bbox_inches="tight")
 plt.close()
-print("  Saved: visualizations/fig2_roc_curve.png")
+print("  Saved: visualisations/fig2_roc_curve.png")
 
 # Fig 3 — PR curve
 sk_ap = average_precision_score(y_test, y_prob_test)
@@ -260,9 +260,9 @@ ax.set_xlabel("Recall"); ax.set_ylabel("Precision")
 ax.set_title("Precision-Recall Curve — Telco Churn", fontweight="bold")
 ax.legend(); ax.set_xlim([-0.01, 1.01]); ax.set_ylim([-0.01, 1.01])
 plt.tight_layout()
-plt.savefig("visualizations/fig3_pr_curve.png", bbox_inches="tight")
+plt.savefig("visualisations/fig3_pr_curve.png", bbox_inches="tight")
 plt.close()
-print("  Saved: visualizations/fig3_pr_curve.png")
+print("  Saved: visualisations/fig3_pr_curve.png")
 
 # Fig 4 — Threshold sweep (fine-grained)
 sweep_fine_df = pd.DataFrame(metrics.threshold_sweep(np.linspace(0.05, 0.95, 300)))
@@ -272,16 +272,16 @@ ax.plot(sweep_fine_df["threshold"], sweep_fine_df["precision"], label="Precision
 ax.plot(sweep_fine_df["threshold"], sweep_fine_df["recall"],    label="Recall",    color="#DC2626", lw=2)
 ax.plot(sweep_fine_df["threshold"], sweep_fine_df["f1"],        label="F1",        color="#7C3AED", lw=2)
 ax.axvline(threshold, color="gray", lw=1.2, linestyle="--",
-           label=f"Day 3 default ({threshold:.2f})")
+           label=f"Logistic Regression default ({threshold:.2f})")
 ax.axvline(opt_f1["threshold"], color="#7C3AED", lw=1.2, linestyle=":",
            label=f"F1-optimal ({opt_f1['threshold']:.2f})")
 ax.set_xlabel("Decision Threshold"); ax.set_ylabel("Metric Value")
 ax.set_title("How Metrics Change with Threshold — Telco Churn", fontweight="bold")
 ax.legend(loc="center right"); ax.set_ylim([0, 1.05])
 plt.tight_layout()
-plt.savefig("visualizations/fig4_threshold_sweep.png", bbox_inches="tight")
+plt.savefig("visualisations/fig4_threshold_sweep.png", bbox_inches="tight")
 plt.close()
-print("  Saved: visualizations/fig4_threshold_sweep.png")
+print("  Saved: visualisations/fig4_threshold_sweep.png")
 
 # Fig 5 — Dashboard
 fig = plt.figure(figsize=(14, 10))
@@ -321,9 +321,9 @@ ax4.set_title(f"Confusion Matrix (F1-opt t={opt_f1['threshold']:.2f})")
 
 fig.suptitle("Day 04 — Classification Metrics Dashboard (Telco Churn)",
              fontsize=14, fontweight="bold")
-plt.savefig("visualizations/fig5_dashboard.png", bbox_inches="tight")
+plt.savefig("visualisations/fig5_dashboard.png", bbox_inches="tight")
 plt.close()
-print("  Saved: visualizations/fig5_dashboard.png")
+print("  Saved: visualisations/fig5_dashboard.png")
 
 # ─────────────────────────────────────────────
 # 6. Final summary
