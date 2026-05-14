@@ -314,7 +314,7 @@ class ClassificationMetrics:
         y_sorted = y[order]
 
         # np.trapz: ∫y dx  using the trapezoidal rule
-        return float(np.trapz(y_sorted, x_sorted))
+        return float(np.trapezoid(y_sorted, x_sorted))
 
     def _compute_average_precision(
         self,
