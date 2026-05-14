@@ -203,6 +203,9 @@ def main():
 
     # ── Save ─────────────────────────────────────────────────────────────
     os.makedirs("models", exist_ok=True)
+
+    df_encoded.to_csv("data/churn_features.csv", index=False)
+
     artifact = {
         "model": model,
         "scaler": scaler,
