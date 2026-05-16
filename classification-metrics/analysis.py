@@ -201,8 +201,6 @@ print(f"    Cost-sensitive:  t={opt_cost['threshold']:.3f}  →  "
 # 5. Visualisations
 # ─────────────────────────────────────────────
 
-os.makedirs("visualizations", exist_ok=True)
-
 # Fig 1 — Three confusion matrices
 fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 fig.suptitle("Confusion Matrix — Threshold Comparison (Telco Churn)",
