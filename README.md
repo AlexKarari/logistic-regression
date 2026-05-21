@@ -61,6 +61,7 @@ This is a **binary classification** problem with natural class imbalance (~26% c
 | F1 Score | ~0.60 | ~0.58 |
 
 *Validated against sklearn LogisticRegression — exact metric match.*
+**Note:** Default threshold = 0.50. See classification-metrics repo for threshold optimisation — F1-optimal threshold recovers significant recall with minimal precision loss.
 
 ### Top Churn Predictors (learned weights)
 
@@ -80,6 +81,8 @@ This is a **binary classification** problem with natural class imbalance (~26% c
 3. **Tenure is protective** — each additional month significantly reduces churn probability
 4. **Electronic check = warning sign** — highest churn rate among payment methods (~45%)
 5. **Cross-entropy converges smoothly** — validates the convexity advantage over MSE for classification
+6. **Default threshold** (0.50) is a convention, not an optimised value — 
+  see classification-metrics repo for threshold analysis showing recall improvement to ~0.6x at F1-optimal threshold.
 
 ## ML Concepts Practiced
 
@@ -118,3 +121,10 @@ python train_model.py
 # 5. Explore the notebook
 jupyter notebook notebooks/logistic_regression.ipynb
 ```
+
+## Connected Repos
+| Topic | Relationship |
+|-----|-------|-------------|
+| Classification Metrics Deep Dive | Evaluates this model — ROC, PR curve, threshold optimisation |
+| FastAPI Deployment | Deploys this model as a REST API |
+| Docker | Containerises the Logistic Regression API |
