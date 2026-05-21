@@ -74,6 +74,13 @@ This is a **binary classification** problem with natural class imbalance (~26% c
 | Electronic check | ↑ churn | Less "committed" payment method |
 | MonthlyCharges | ↑ churn | Higher bills = more churn |
 
+## Output Files
+
+| File | Description |
+|------|-------------|
+| `models/churn_model.pkl` | Serialised artifact: model, scaler, feature names, threshold, metrics, encoding info |
+| `data/churn_features.csv` | Encoded feature matrix — used by classification metrics for evaluation |
+
 ## Key Findings
 
 1. **Contract type dominates** — month-to-month customers churn at ~42% vs ~3% for two-year contracts
